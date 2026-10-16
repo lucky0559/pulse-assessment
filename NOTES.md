@@ -68,7 +68,10 @@ Ranked by what an attacker gets:
    is drawn at the offset position.
 5. **Hardcoded Mapbox token fallback in source (medium).** Removed (it lives in
    git history regardless — it should be rotated by whoever owns it). Use a
-   URL-restricted public token.
+   URL-restricted public token. _My deployment uses Mapbox's default public
+   token, which is unrestricted: Mapbox required a payment card to create a
+   restricted one. It is a public `pk.` token by design, but restricting it to
+   the production URL is the follow-up._
 6. **Untrusted peer input (medium).** Data-channel messages were unbounded.
    _Fixed:_ size cap, incoming rate limit, control-message whitelist. Chat is
    rendered as text (no `dangerouslySetInnerHTML`), so no XSS path.
