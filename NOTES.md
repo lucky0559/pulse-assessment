@@ -1,6 +1,6 @@
 # Pulse — assessment notes
 
-Live: _see submission email_ · Repo: https://github.com/lucky-lucky05/pulse-assessment
+Live: _see submission email_ · Repo: https://github.com/lucky0559/pulse-assessment
 
 `node scripts/api-smoke.mjs [baseUrl]` runs 30+ end-to-end checks against a
 running server (lifecycle, authorization, privacy offset, expiry, block).
