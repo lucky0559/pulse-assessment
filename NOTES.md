@@ -121,8 +121,12 @@ notifications, push instead of polling (SSE/Pusher), shared-store rate limiting.
 - That e2e run found a bug the API tests could not: my `breathe`/hover
   animations set `transform` on the same element Mapbox positions, so every
   peer dot collapsed to the top-left corner. Fixed by wrapping each dot.
-- Caveats: the e2e stubs Mapbox's style request (no real token was available),
-  so the _real_ dark-v11 basemap/globe fog was not seen. Video steps need
+- The e2e also passed against the **real Mapbox dark-v11 basemap**
+  (`REAL_MAPBOX=1`, with the dev server started using a real public token):
+  your light over Manila, the conversation arc drawn over real streets, the
+  "N lights · 1 conversation" readout. Globe fog is only visible zoomed far out
+  and wasn't separately screenshotted.
+- Caveats: the default e2e mode stubs Mapbox's style request. Video steps need
   headed Chrome (headless fake camera never resolves); the full run, video
   included, passed headed on the final code (remote frames on both sides,
   blur-first, reveal/re-blur, mute, end video, block).

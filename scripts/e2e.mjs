@@ -45,13 +45,17 @@ async function user(lat, lng, label) {
     geolocation: { latitude: lat, longitude: lng },
     permissions: ["geolocation", "camera", "microphone"],
   });
-  await ctx.route(/mapbox\.com/, (route) => {
-    const url = route.request().url();
-    if (url.includes("/styles/v1/")) {
-      return route.fulfill({ json: STYLE });
-    }
-    return route.fulfill({ status: 204, body: "" });
-  });
+  // REAL_MAPBOX=1 uses the real basemap (needs the dev server started with a
+  // real NEXT_PUBLIC_MAPBOX_TOKEN); otherwise Mapbox is stubbed.
+  if (process.env.REAL_MAPBOX !== "1") {
+    await ctx.route(/mapbox\.com/, (route) => {
+      const url = route.request().url();
+      if (url.includes("/styles/v1/")) {
+        return route.fulfill({ json: STYLE });
+      }
+      return route.fulfill({ status: 204, body: "" });
+    });
+  }
   const page = await ctx.newPage();
   const errors = [];
   page.on("console", (m) => {
