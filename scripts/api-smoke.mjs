@@ -38,6 +38,11 @@ const a = await join(A);
 const b = await join(B, 35.6, 139.7);
 const c = await join(C, 51.5, -0.1);
 
+// Real clients heartbeat every 1.5s. Keep B alive while the scripted steps run
+// (slower deployed latency can otherwise push it past the 15s stale limit);
+// it's stopped before the stale-expiry check below.
+const keepAlive = setInterval(() => void poll(B).catch(() => {}), 4000);
+
 // --- Presence & privacy ----------------------------------------------------
 let pa = await poll(A);
 check("poll lists the other users", pa.peers.length >= 2);
@@ -123,6 +128,8 @@ r = await signal(D, e.id, "request");
 check("blocked user's requests auto-decline", r.body.autoDeclined === true, JSON.stringify(r.body));
 await leave(D);
 await leave(E);
+
+clearInterval(keepAlive);
 
 // --- Stale expiry (the original bug) ---------------------------------------
 console.log("...waiting 17s for stale expiry (C keeps polling, B does not)");

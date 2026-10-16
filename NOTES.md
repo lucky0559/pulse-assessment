@@ -1,6 +1,6 @@
 # Pulse — assessment notes
 
-Live: _see submission email_ · Repo: https://github.com/lucky0559/pulse-assessment
+Live: https://pulse-assessment-eight.vercel.app · Repo: https://github.com/lucky0559/pulse-assessment
 
 `node scripts/api-smoke.mjs [baseUrl]` runs 30+ end-to-end checks against a
 running server (lifecycle, authorization, privacy offset, expiry, block).
@@ -133,7 +133,13 @@ notifications, push instead of polling (SSE/Pusher), shared-store rate limiting.
   headed Chrome (headless fake camera never resolves); the full run, video
   included, passed headed on the final code (remote frames on both sides,
   blur-first, reveal/re-blur, mute, end video, block).
-- Not done: Vercel deployment (needs a Mapbox token, a hosted Postgres URL and a
-  Vercel login). Steps: set `DATABASE_URL` + `NEXT_PUBLIC_MAPBOX_TOKEN` in
-  Vercel, run `npx prisma migrate deploy` against that database, deploy.
+- **Deployed and verified live** on Vercel + Neon (`prisma migrate deploy`
+  against Neon; `DATABASE_URL` + `NEXT_PUBLIC_MAPBOX_TOKEN` set in Vercel).
+  Against the live URL: `scripts/api-smoke.mjs` all pass, and `scripts/e2e.mjs`
+  with the real Mapbox basemap passes (headed run including video; a later
+  headless run without video). Security headers/CSP confirmed on the live
+  response. A first live run showed 2 failures that were test timing (fixed
+  sleeps too short for network latency, and the smoke test's second user going
+  stale mid-run); a direct probe confirmed the app itself behaved correctly,
+  and both tests were changed to wait on conditions / keep users alive.
 - Local development used an in-memory Postgres (PGlite) instead of Neon.

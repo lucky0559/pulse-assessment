@@ -205,14 +205,17 @@ await B.screenshot({ path: `${OUT}/07-block-confirm.png` });
 await B.getByRole("button", { name: "Block", exact: true }).click();
 await A.getByText("Stranger disconnected.").waitFor({ timeout: 10000 });
 check("blocked side is told the chat ended", true);
-await A.waitForTimeout(2200);
+// Wait for the next polls to land (deployed latency > local) instead of a fixed sleep.
+const dotsEq = (n) => (want) => document.querySelectorAll(".pulse-dot").length === want;
+await A.waitForFunction(dotsEq(1), 1, { timeout: 12000 }).catch(() => {});
+await B.waitForFunction(dotsEq(1), 1, { timeout: 12000 }).catch(() => {});
 const aDots = await A.locator(".pulse-dot").count();
 const bDots = await B.locator(".pulse-dot").count();
 check("block hides each from the other (A sees only C, B sees only C)", aDots === 1 && bDots === 1, `A=${aDots} B=${bDots}`);
 
 // --- leave frees dots -------------------------------------------------------
 await C.close();
-await A.waitForTimeout(2500);
+await A.waitForFunction(() => document.querySelectorAll(".pulse-dot").length === 0, null, { timeout: 12000 }).catch(() => {});
 check("closing a tab removes its dot", (await A.locator(".pulse-dot").count()) === 0);
 
 for (const p of [A, B]) {
